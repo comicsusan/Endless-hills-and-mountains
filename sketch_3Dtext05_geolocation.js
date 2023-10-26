@@ -25,9 +25,9 @@ var clon=0 ;
 var zom =14;
 //const key = 'sk.eyJ1Ijoic2FuZGFuZGFuaWFvIiwiYSI6ImNsNnltdXB4cDBhaHQzb21hcjhmc2F0ajMifQ.EB48neBzds8Ts3Ttl-rJFQ'
 
-//let font;
-let graphics;
-let samurai;
+let font;
+//let graphics;
+//let samurai;
 
 //const mappa = new Mappa('Mapbox', key);
 
@@ -69,11 +69,11 @@ function preload() {
 
 
   //获取中心坐标设定范围内景物坐标
-  loadJSON('https://api.tianditu.gov.cn/v2/search?postStr={%22keyWord%22:%22%E5%B1%B1%22,%22level%22:12,%22queryRadius%22:9000,%22pointLonlat%22:%22'+
+ loadJSON('https://restapi.amap.com/v3/geocode/regeo?location='+
     clon+
     ','+
     clat+
-    '%22,%22queryType%22:3,%22start%22:0,%22count%22:20,%22dataTypes%22:%22260202,260203,260206%22}&type=query&tk=9659a52b7b90ad75f886dd74dbc3837c', gotData);
+    '&key=a3786df8344a3ac3779726effc973a94&radius=3000&poitype=岛屿|山|丘陵|山地|山脉&extensions=all', gotData);
 
 
   mimg = loadImage('picture/019.png');
@@ -82,7 +82,7 @@ function preload() {
   moun1=loadModel('mountain_Mode/mou_006.obj');
   moun2=loadModel('mountain_Mode/mou_007.obj');
   
-  font = loadFont('inconsolata.otf');
+  font = loadFont('picture/inconsolata.otf');
   //let ms=[,'mountain_Mode/mou_006.obj','mountain_Mode/mou_007.obj']
 }
 
@@ -158,36 +158,15 @@ function draw() {
   //box(50);
 
 
-  //
-  var islandCount=viwe["260202"].count;
-
-  if (islandCount>0) {
-    var islandPois=viwe["260202"].pois;
-    for (var i=0; i<islandPois.length; i++) {
-      var islandLonlat=islandPois[i].lonlat.split(',');
-      var islandLon=islandLonlat[0];
-      var islandLat=islandLonlat[1];
-      var ix=mercX(islandLon) - cx;
-      var iy=mercY(islandLat) - cy;
-
-      stroke(0, 255, 255);
-      fill(0, 255, 255, 200);
-      ellipse(ix, iy, 5, 5);
-
-      //text(islandPois[i].name,10,10*i+10);
-    }
-  } else {
-    console.log("noisland");
-  }
 
   //
 
-  var mountainsCount=viwe["260203"].count;
+  var mountainsCount=viwe.status;
 
-  if (mountainsCount>0) {
-    var mountainsPois=viwe["260203"].pois;
+  if (mountainsCount==1) {
+    var mountainsPois=viwe["regeocode"].pois;
     for (var m=0; m<mountainsPois.length; m++) {
-      var mountainsLonlat=mountainsPois[m].lonlat.split(',');
+      var mountainsLonlat=mountainsPois[m].location.split(',');
       var mountainsLon=mountainsLonlat[0];
       var mountainsLat=mountainsLonlat[1];
       var mx=mercX(mountainsLon) - cx;
@@ -231,35 +210,13 @@ function draw() {
 
 
 
-      text(mountainsPois[m].name, mx, my);
+     // text(mountainsPois[m].name, mx, my);
     }
   } else {
     console.log("nomountains");
   }
 
-  //
 
-  var valleyCount=viwe["260206"].count;
-
-  if (valleyCount>0) {
-
-    var valleyPois=viwe["260206"].pois;
-    for (var v=0; v<valleyPois.length; v++) {
-      var valleyLonlat=valleyPois[v].lonlat.split(',');
-      var valleyLon=valleyLonlat[0];
-      var valleyLat=valleyLonlat[1];
-      var vx=mercX(valleyLon) - cx;
-      var vy=mercY(valleyLat) - cy;
-
-      stroke(255, 255, 0);
-      fill(255, 255, 0, 200);
-      ellipse(vx, vy, 5, 5);
-
-      //text(valleyPois[v].name,10,10*v+10);
-    }
-  } else {
-    console.log("novalley");
-  }
  
   
 }
